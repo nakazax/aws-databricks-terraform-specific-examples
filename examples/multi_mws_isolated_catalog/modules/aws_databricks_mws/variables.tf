@@ -38,13 +38,15 @@ variable "databricks_account_id" {
 }
 
 variable "databricks_metastore_id" {
-  type        = string
-  default     = ""
-  description = "If provided, the metastore id will be linked to the databricks workspace."
+  type = string
 }
 
-variable "databricks_admin_principal_id" {
+variable "workspace_admin_group_name" {
+  type = string
+}
+
+variable "workspace_admin_user_id" {
   type        = string
   default     = ""
-  description = "If provided, the admin permission will be assigned to the principal id."
+  description = "If provided, the user will be added to the admin group."
 }

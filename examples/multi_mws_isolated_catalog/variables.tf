@@ -20,11 +20,12 @@ variable "databricks_metastore_id" {
 
 variable "databricks_workspaces" {
   type = map(object({
-    prefix                        = string
-    vpc_cidr                      = string
-    public_subnets_cidr           = list(string)
-    private_subnet_pair           = list(string)
-    tags                          = map(string)
-    databricks_admin_principal_id = string
+    prefix                     = string
+    vpc_cidr                   = string
+    public_subnets_cidr        = list(string)
+    private_subnet_pair        = list(string)
+    tags                       = map(string)
+    workspace_admin_group_name = string
+    workspace_admin_user_id    = string
   }))
 }

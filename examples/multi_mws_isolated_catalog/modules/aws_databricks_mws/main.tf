@@ -58,19 +58,25 @@ resource "databricks_mws_workspaces" "this" {
   token {}
 }
 
-# (Option) If the metastore id is provided, create the metastore assignment to workspace, otherwise skip it
 resource "databricks_metastore_assignment" "this" {
-  count        = var.databricks_metastore_id != "" ? 1 : 0
   metastore_id = var.databricks_metastore_id
   workspace_id = databricks_mws_workspaces.this.workspace_id
 }
 
-# (Option) If the admin principal id is provided, create the permission assignment to workspace, otherwise skip it
-# Metastore assignment is required for the permission assignment
-resource "databricks_mws_permission_assignment" "admin_user" {
-  count        = var.databricks_admin_principal_id != "" && var.databricks_metastore_id != "" ? 1 : 0
+resource "databricks_group" "workspace_admin" {
+  display_name     = var.workspace_admin_group_name
+  workspace_access = true
+}
+
+resource "databricks_mws_permission_assignment" "workspace_admin" {
   workspace_id = databricks_mws_workspaces.this.workspace_id
-  principal_id = var.databricks_admin_principal_id
+  principal_id = databricks_group.workspace_admin.id
   permissions  = ["ADMIN"]
-  depends_on   = [databricks_metastore_assignment.this]
+}
+
+# (Option) If the admin principal id is provided, create the admin group membership, otherwise skip it
+resource "databricks_group_member" "admin_user" {
+  count     = var.workspace_admin_user_id != "" ? 1 : 0
+  group_id  = databricks_group.workspace_admin.id
+  member_id = var.workspace_admin_user_id
 }
