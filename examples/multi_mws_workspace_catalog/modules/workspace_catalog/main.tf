@@ -6,7 +6,7 @@ data "aws_caller_identity" "current" {}
 resource "databricks_storage_credential" "external" {
   name = "${var.prefix}-external-access"
   aws_iam_role {
-    role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.prefix}-uc-access" //cannot reference aws_iam_role directly, as it will create circular dependency
+    role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.prefix}-external-access" //cannot reference aws_iam_role directly, as it will create circular dependency
   }
   comment = "Managed by TF"
 }
@@ -19,6 +19,9 @@ resource "aws_s3_bucket" "external" {
   acl    = "private"
   // destroy all objects with bucket destroy
   force_destroy = true
+  tags = merge(var.tags, {
+    Name = "${var.prefix}-external"
+  })
 }
 
 resource "aws_s3_bucket_versioning" "external_versioning" {
@@ -59,7 +62,7 @@ data "aws_iam_policy_document" "passrole_for_uc" {
     condition {
       test     = "ArnLike"
       variable = "aws:PrincipalArn"
-      values   = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.prefix}-uc-access"]
+      values   = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.prefix}-external-access"]
     }
   }
 }
@@ -92,11 +95,14 @@ resource "aws_iam_policy" "external_data_access" {
           "sts:AssumeRole"
         ],
         "Resource" : [
-          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.prefix}-uc-access"
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.prefix}-external-access"
         ],
         "Effect" : "Allow"
       },
     ]
+  })
+  tags = merge(var.tags, {
+    Name = "${var.prefix}-unity-catalog external access IAM policy"
   })
 }
 
@@ -104,4 +110,17 @@ resource "aws_iam_role" "external_data_access" {
   name                = "${var.prefix}-external-access"
   assume_role_policy  = data.aws_iam_policy_document.passrole_for_uc.json
   managed_policy_arns = [aws_iam_policy.external_data_access.arn]
+  tags = merge(var.tags, {
+    Name = "${var.prefix}-unity-catalog external access IAM role"
+  })
+}
+
+# =============================================================================
+# Create a databricks_external_location
+# =============================================================================
+resource "databricks_external_location" "this" {
+  name            = "${aws_s3_bucket.external.id}_external_location"
+  url             = "s3://${aws_s3_bucket.external.id}"
+  credential_name = databricks_storage_credential.external.id
+  comment         = "Managed by TF"
 }

@@ -1,4 +1,4 @@
-output "databrics_workspace_name" {
+output "databricks_workspace_name" {
   value = databricks_mws_workspaces.this.workspace_name
 }
 
