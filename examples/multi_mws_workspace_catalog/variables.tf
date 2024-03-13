@@ -2,18 +2,18 @@ variable "region" {
   type = string
 }
 
-variable "databricks_workspace1" {
+variable "databricks_ws1" {
   type = object({
-    prefix                     = string
-    databricks_workspace_url   = string
-    databricks_workspace_token = string
+    prefix = string
+    url    = string
+    token  = string
   })
 }
 
-variable "databricks_workspace2" {
+variable "databricks_ws2" {
   type = object({
-    prefix                     = string
-    databricks_workspace_url   = string
-    databricks_workspace_token = string
+    prefix = string
+    url    = string
+    token  = string
   })
 }
