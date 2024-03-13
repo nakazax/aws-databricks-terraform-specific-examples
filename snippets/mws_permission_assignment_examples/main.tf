@@ -52,7 +52,7 @@ resource "databricks_mws_permission_assignment" "group1" {
 
 resource "databricks_user" "user1" {
   provider  = databricks.mws
-  user_name = "hiroyuki.nakazato@gmail.com"
+  user_name = "me@example.com"
 }
 
 resource "databricks_group_member" "user1" {
