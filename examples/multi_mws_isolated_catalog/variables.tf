@@ -26,6 +26,6 @@ variable "databricks_workspaces" {
     private_subnet_pair        = list(string)
     tags                       = map(string)
     workspace_admin_group_name = string
-    workspace_admin_user_id    = string
+    workspace_admin_user_ids   = set(string)
   }))
 }

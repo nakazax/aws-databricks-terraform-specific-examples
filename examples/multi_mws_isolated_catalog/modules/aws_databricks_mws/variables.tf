@@ -45,8 +45,8 @@ variable "workspace_admin_group_name" {
   type = string
 }
 
-variable "workspace_admin_user_id" {
-  type        = string
-  default     = ""
-  description = "If provided, the user will be added to the admin group."
+variable "workspace_admin_user_ids" {
+  type        = set(string)
+  default     = []
+  description = "If provided, the users will be added to the admin group."
 }

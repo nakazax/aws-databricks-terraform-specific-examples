@@ -74,9 +74,8 @@ resource "databricks_mws_permission_assignment" "workspace_admin" {
   permissions  = ["ADMIN"]
 }
 
-# (Option) If the admin principal id is provided, create the admin group membership, otherwise skip it
 resource "databricks_group_member" "admin_user" {
-  count     = var.workspace_admin_user_id != "" ? 1 : 0
+  for_each  = toset(var.workspace_admin_user_ids)
   group_id  = databricks_group.workspace_admin.id
-  member_id = var.workspace_admin_user_id
+  member_id = each.value
 }

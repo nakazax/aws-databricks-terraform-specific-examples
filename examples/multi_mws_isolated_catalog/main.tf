@@ -19,5 +19,5 @@ module "aws_databricks_mws" {
   private_subnet_pair        = each.value.private_subnet_pair
   tags                       = each.value.tags
   workspace_admin_group_name = each.value.workspace_admin_group_name
-  workspace_admin_user_id    = each.value.workspace_admin_user_id
+  workspace_admin_user_ids   = each.value.workspace_admin_user_ids
 }
