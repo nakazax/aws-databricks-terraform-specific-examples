@@ -10,23 +10,19 @@ variable "prefix" {
 # AWS variables
 # =============================================================================
 variable "region" {
-  type    = string
-  default = "ap-northeast-1"
+  type = string
 }
 
 variable "vpc_cidr" {
-  type    = string
-  default = "10.109.0.0/17"
+  type = string
 }
 
 variable "public_subnets_cidr" {
-  type    = list(string)
-  default = ["10.109.2.0/23"]
+  type = list(string)
 }
 
 variable "private_subnet_pair" {
-  type    = list(string)
-  default = ["10.109.4.0/23", "10.109.6.0/23"]
+  type = list(string)
 }
 
 variable "tags" {
@@ -38,14 +34,6 @@ variable "tags" {
 # Databricks variables
 # =============================================================================
 variable "databricks_account_id" {
-  type = string
-}
-
-variable "databricks_client_id" {
-  type = string
-}
-
-variable "databricks_client_secret" {
   type = string
 }
 

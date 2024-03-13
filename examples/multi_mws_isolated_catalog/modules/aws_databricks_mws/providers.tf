@@ -1,15 +1,13 @@
 terraform {
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.0"
+      source = "hashicorp/aws"
     }
     databricks = {
       source = "databricks/databricks"
     }
+    random = {
+      source = "hashicorp/random"
+    }
   }
-}
-
-provider "aws" {
-  region = var.region
 }
