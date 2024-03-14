@@ -21,7 +21,7 @@ module "aws_infra" {
 }
 
 # Work around to wait for the role to be created
-resource "time_sleep" "wait" {
+resource "time_sleep" "wait_iam_role" {
   create_duration = "10s"
   depends_on      = [module.aws_infra.cross_account_role_arn]
 }
@@ -29,7 +29,7 @@ resource "time_sleep" "wait" {
 resource "databricks_mws_credentials" "this" {
   credentials_name = "${local.prefix}-creds"
   role_arn         = module.aws_infra.cross_account_role_arn
-  depends_on       = [time_sleep.wait]
+  depends_on       = [time_sleep.wait_iam_role]
 }
 
 resource "databricks_mws_storage_configurations" "this" {
@@ -68,10 +68,17 @@ resource "databricks_group" "workspace_admin" {
   workspace_access = true
 }
 
+# Work around to wait for the workspace to be ready for permission assignment
+resource "time_sleep" "wait_metastore_assignment" {
+  create_duration = "10s"
+  depends_on      = [databricks_metastore_assignment.this]
+}
+
 resource "databricks_mws_permission_assignment" "workspace_admin" {
   workspace_id = databricks_mws_workspaces.this.workspace_id
   principal_id = databricks_group.workspace_admin.id
   permissions  = ["ADMIN"]
+  depends_on   = [time_sleep.wait_metastore_assignment]
 }
 
 resource "databricks_group_member" "admin_user" {

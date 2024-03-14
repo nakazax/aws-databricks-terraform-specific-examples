@@ -15,7 +15,24 @@ variable "databricks_client_secret" {
 }
 
 variable "databricks_metastore_id" {
+  type        = string
+  default     = ""
+  description = <<-EOT
+    If provided, skip creating a new metastore and assign the existing one to the workspace.
+    Note that the Databricks service principal that executes this Terraform script must be a member of the admin group of the existing metastore.
+  EOT
+}
+
+variable "databricks_account_admin_group_name" {
   type = string
+}
+
+variable "databricks_account_admin_user_ids" {
+  type = list(string)
+}
+
+variable "databricks_account_admin_service_principal_ids" {
+  type = list(string)
 }
 
 variable "databricks_workspaces" {
