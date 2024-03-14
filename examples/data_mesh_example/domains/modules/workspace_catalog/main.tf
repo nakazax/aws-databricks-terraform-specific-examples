@@ -1,3 +1,6 @@
+# This module create catalog related resources for a workspace.
+# Ref. https://registry.terraform.io/providers/databricks/databricks/latest/docs/guides/unity-catalog
+
 # =============================================================================
 # Create a storage credential for external access
 # =============================================================================
@@ -115,6 +118,12 @@ resource "aws_iam_role" "external_data_access" {
   })
 }
 
+# Work around to wait for the role to be created
+resource "time_sleep" "wait_iam_role" {
+  create_duration = "10s"
+  depends_on      = [aws_iam_role.external_data_access]
+}
+
 # =============================================================================
 # Create a databricks_external_location
 # =============================================================================
@@ -123,4 +132,15 @@ resource "databricks_external_location" "this" {
   url             = "s3://${aws_s3_bucket.external.id}"
   credential_name = databricks_storage_credential.external.id
   comment         = "Managed by TF"
+  depends_on      = [time_sleep.wait_iam_role]
+}
+
+# =============================================================================
+# Create a catalog for the workspace
+# =============================================================================
+resource "databricks_catalog" "this" {
+  name = var.catalog_name
+  storage_root = "s3://${aws_s3_bucket.external.id}/${var.catalog_name}"
+  isolation_mode = "ISOLATED"
+  comment = "Managed by TF"
 }

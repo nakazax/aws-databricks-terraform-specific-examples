@@ -14,13 +14,7 @@ provider "aws" {
 }
 
 provider "databricks" {
-  alias = "ws1"
-  host  = var.databricks_ws1.url
-  token = var.databricks_ws1.token
-}
-
-provider "databricks" {
-  alias = "ws2"
-  host  = var.databricks_ws2.url
-  token = var.databricks_ws2.token
+  alias = "domain1"
+  host  = var.domain1_ws.url
+  token = var.domain1_ws.token
 }

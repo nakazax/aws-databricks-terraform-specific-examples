@@ -5,3 +5,7 @@ variable "prefix" {
 variable "tags" {
   default = {}
 }
+
+variable "catalog_name" {
+  type = string
+}
