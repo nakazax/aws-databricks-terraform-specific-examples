@@ -1,3 +1,6 @@
+# =============================================================================
+# Generate a random string for the Databricks workspace and AWS resources
+# =============================================================================
 resource "random_string" "naming" {
   special = false
   upper   = false
@@ -8,6 +11,9 @@ locals {
   prefix = var.prefix != "" ? var.prefix : "demo${random_string.naming.result}"
 }
 
+# =============================================================================
+# Create AWS infrastructure for Databricks workspace
+# =============================================================================
 module "aws_infra" {
   source = "./modules/aws_infra"
 
@@ -26,6 +32,9 @@ resource "time_sleep" "wait_iam_role" {
   depends_on      = [module.aws_infra.cross_account_role_arn]
 }
 
+# =============================================================================
+# Create Databricks MWS resources
+# =============================================================================
 resource "databricks_mws_credentials" "this" {
   credentials_name = "${local.prefix}-creds"
   role_arn         = module.aws_infra.cross_account_role_arn
@@ -58,6 +67,9 @@ resource "databricks_mws_workspaces" "this" {
   token {}
 }
 
+# =============================================================================
+# Create and grant workspace admin permissions to the workspace admin group
+# =============================================================================
 resource "databricks_metastore_assignment" "this" {
   metastore_id = var.databricks_metastore_id
   workspace_id = databricks_mws_workspaces.this.workspace_id
