@@ -139,8 +139,9 @@ resource "databricks_external_location" "this" {
 # Create a catalog for the workspace
 # =============================================================================
 resource "databricks_catalog" "this" {
-  name = var.catalog_name
-  storage_root = "s3://${aws_s3_bucket.external.id}/${var.catalog_name}"
+  name           = var.catalog_name
+  storage_root   = "s3://${aws_s3_bucket.external.id}/${var.catalog_name}"
   isolation_mode = "ISOLATED"
-  comment = "Managed by TF"
+  comment        = "Managed by TF"
+  depends_on     = [databricks_external_location.this]
 }
