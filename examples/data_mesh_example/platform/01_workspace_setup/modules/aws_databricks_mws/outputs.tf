@@ -10,3 +10,7 @@ output "databricks_workspace_token" {
   value     = databricks_mws_workspaces.this.token[0].token_value
   sensitive = true
 }
+
+output "databricks_workspace_admin_group_name" {
+  value = databricks_group.workspace_admin.display_name
+}
