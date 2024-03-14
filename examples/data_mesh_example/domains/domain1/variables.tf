@@ -2,11 +2,12 @@ variable "region" {
   type = string
 }
 
-variable "domain1_ws" {
+variable "domain1" {
   type = object({
-    prefix       = string
-    url          = string
-    token        = string
-    catalog_name = string
+    admin_group_name = string
+    catalog_name     = string
+    prefix           = string
+    token            = string
+    url              = string
   })
 }

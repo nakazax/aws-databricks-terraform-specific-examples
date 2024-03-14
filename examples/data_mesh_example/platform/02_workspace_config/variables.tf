@@ -4,16 +4,16 @@ variable "databricks_metastore_id" {
 
 variable "domain1" {
   type = object({
-    url              = string
-    token            = string
     admin_group_name = string
+    token            = string
+    url              = string
   })
 }
 
 variable "domain2" {
   type = object({
-    url              = string
-    token            = string
     admin_group_name = string
+    token            = string
+    url              = string
   })
 }

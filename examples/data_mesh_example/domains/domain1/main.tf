@@ -4,6 +4,7 @@ module "workspace_catalog1" {
     aws        = aws
     databricks = databricks.domain1
   }
-  prefix       = var.domain1_ws.prefix
-  catalog_name = var.domain1_ws.catalog_name
+  prefix           = var.domain1.prefix
+  catalog_name     = var.domain1.catalog_name
+  admin_group_name = var.domain1.admin_group_name
 }

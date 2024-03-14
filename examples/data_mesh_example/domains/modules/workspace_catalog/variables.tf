@@ -9,3 +9,7 @@ variable "tags" {
 variable "catalog_name" {
   type = string
 }
+
+variable "admin_group_name" {
+  type = string
+}

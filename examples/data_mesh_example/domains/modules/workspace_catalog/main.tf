@@ -120,7 +120,7 @@ resource "aws_iam_role" "external_data_access" {
 
 # Work around to wait for the role to be created
 resource "time_sleep" "wait_iam_role" {
-  create_duration = "10s"
+  create_duration = "30s"
   depends_on      = [aws_iam_role.external_data_access]
 }
 
@@ -144,4 +144,28 @@ resource "databricks_catalog" "this" {
   isolation_mode = "ISOLATED"
   comment        = "Managed by TF"
   depends_on     = [databricks_external_location.this]
+}
+
+# =============================================================================
+# Assign all privileges to the admin group
+# =============================================================================
+resource "databricks_grant" "storage_credential" {
+  storage_credential = databricks_storage_credential.external.id
+  principal  = var.admin_group_name
+  privileges = ["ALL_PRIVILEGES"]
+  depends_on = [databricks_catalog.this]
+}
+
+resource "databricks_grant" "external_location" {
+  external_location = databricks_external_location.this.id
+  principal  = var.admin_group_name
+  privileges = ["ALL_PRIVILEGES"]
+  depends_on = [databricks_catalog.this]
+}
+
+resource "databricks_grant" "catalog" {
+  catalog = databricks_catalog.this.id
+  principal  = var.admin_group_name
+  privileges = ["ALL_PRIVILEGES"]
+  depends_on = [databricks_catalog.this]
 }
