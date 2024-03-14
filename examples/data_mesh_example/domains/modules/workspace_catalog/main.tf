@@ -9,7 +9,7 @@ data "aws_caller_identity" "current" {}
 resource "databricks_storage_credential" "external" {
   name = "${var.prefix}-external-access"
   aws_iam_role {
-    role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.prefix}-external-access" //cannot reference aws_iam_role directly, as it will create circular dependency
+    role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.prefix}-uc-access" //cannot reference aws_iam_role directly, as it will create circular dependency
   }
   comment = "Managed by TF"
 }
@@ -65,7 +65,7 @@ data "aws_iam_policy_document" "passrole_for_uc" {
     condition {
       test     = "ArnLike"
       variable = "aws:PrincipalArn"
-      values   = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.prefix}-external-access"]
+      values   = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.prefix}-uc-access"]
     }
   }
 }
@@ -98,7 +98,7 @@ resource "aws_iam_policy" "external_data_access" {
           "sts:AssumeRole"
         ],
         "Resource" : [
-          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.prefix}-external-access"
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.prefix}-uc-access"
         ],
         "Effect" : "Allow"
       },
@@ -110,7 +110,7 @@ resource "aws_iam_policy" "external_data_access" {
 }
 
 resource "aws_iam_role" "external_data_access" {
-  name                = "${var.prefix}-external-access"
+  name                = "${var.prefix}-uc-access"
   assume_role_policy  = data.aws_iam_policy_document.passrole_for_uc.json
   managed_policy_arns = [aws_iam_policy.external_data_access.arn]
   tags = merge(var.tags, {
