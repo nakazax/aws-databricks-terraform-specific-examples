@@ -27,12 +27,8 @@ variable "databricks_account_admin_group_name" {
   type = string
 }
 
-variable "databricks_account_admin_user_ids" {
-  type = list(string)
-}
-
-variable "databricks_account_admin_service_principal_ids" {
-  type = list(string)
+variable "databricks_account_admin_principal_ids" {
+  type = set(string)
 }
 
 variable "databricks_workspaces" {

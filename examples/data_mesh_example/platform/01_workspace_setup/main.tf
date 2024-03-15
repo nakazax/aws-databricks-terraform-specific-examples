@@ -9,23 +9,15 @@ resource "databricks_group" "account_admin" {
 
 resource "databricks_group_member" "account_admin" {
   provider  = databricks.mws
-  for_each  = toset(concat(var.databricks_account_admin_user_ids, var.databricks_account_admin_service_principal_ids))
+  for_each  = var.databricks_account_admin_principal_ids
   group_id  = databricks_group.account_admin.id
   member_id = each.value
 }
 
-resource "databricks_user_role" "account_admin" {
+resource "databricks_group_role" "account_admin" {
   provider = databricks.mws
-  for_each = toset(var.databricks_account_admin_user_ids)
-  user_id  = each.value
+  group_id = databricks_group.account_admin.id
   role     = "account_admin"
-}
-
-resource "databricks_service_principal_role" "account_admin" {
-  provider             = databricks.mws
-  for_each             = toset(var.databricks_account_admin_service_principal_ids)
-  service_principal_id = each.value
-  role                 = "account_admin"
 }
 
 # =============================================================================
