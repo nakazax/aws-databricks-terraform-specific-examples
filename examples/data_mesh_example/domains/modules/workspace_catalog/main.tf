@@ -15,7 +15,7 @@ resource "databricks_storage_credential" "external" {
 }
 
 # =============================================================================
-# Create a storage credential for external access
+# Create a S3 bucket for external access
 # =============================================================================
 resource "aws_s3_bucket" "external" {
   bucket = "${var.prefix}-external"
@@ -40,6 +40,9 @@ resource "aws_s3_bucket_public_access_block" "external" {
   depends_on         = [aws_s3_bucket.external]
 }
 
+# =============================================================================
+# Create an IAM policy and role for external access
+# =============================================================================
 data "aws_iam_policy_document" "passrole_for_uc" {
   statement {
     effect  = "Allow"
@@ -147,7 +150,8 @@ resource "databricks_catalog" "this" {
 }
 
 # =============================================================================
-# Assign all privileges to the admin group
+# Assign all privileges to the admin group for
+# the storage credential, external location and catalog
 # =============================================================================
 resource "databricks_grant" "storage_credential" {
   storage_credential = databricks_storage_credential.external.id
