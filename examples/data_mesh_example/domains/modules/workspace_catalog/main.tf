@@ -19,7 +19,6 @@ resource "databricks_storage_credential" "external" {
 # =============================================================================
 resource "aws_s3_bucket" "external" {
   bucket = "${var.prefix}-external"
-  acl    = "private"
   // destroy all objects with bucket destroy
   force_destroy = true
   tags = merge(var.tags, {

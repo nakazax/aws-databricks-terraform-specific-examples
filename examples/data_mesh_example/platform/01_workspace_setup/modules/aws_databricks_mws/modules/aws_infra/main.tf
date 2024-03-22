@@ -34,7 +34,6 @@ resource "aws_subnet" "private_subnets" {
 
 resource "aws_eip" "nat_gateway_elastic_ips" {
   count = length(var.public_subnets_cidr)
-  vpc   = true
 }
 
 resource "aws_nat_gateway" "nat_gateways" {

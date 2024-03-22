@@ -32,11 +32,11 @@ resource "databricks_system_schema" "billing" {
 }
 
 # =============================================================================
-# Create a schema for billing_hub in the workspace catalog
+# Create a schema for hub_schema in the workspace catalog
 # =============================================================================
-resource "databricks_schema" "billing_hub" {
+resource "databricks_schema" "hub_schema" {
   provider     = databricks.domain1
-  name         = "billing_hub"
+  name         = "hub_schema"
   catalog_name = module.workspace_catalog1.databricks_catalog_id
 }
 
@@ -48,7 +48,7 @@ resource "databricks_sql_table" "view_system_billing_usage_domain" {
   for_each        = { for domain in var.domains : domain.domain_name => domain }
   name            = format("view_system_billing_usage_%s", each.value.domain_name)
   catalog_name    = module.workspace_catalog1.databricks_catalog_id
-  schema_name     = databricks_schema.billing_hub.name
+  schema_name     = databricks_schema.hub_schema.name
   table_type      = "VIEW"
   warehouse_id    = databricks_sql_endpoint.serverless_minimal.id
   view_definition = format("SELECT * FROM system.billing.usage WHERE workspace_id = '%s'", each.value.workspace_id)
