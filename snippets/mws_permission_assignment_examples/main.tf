@@ -1,8 +1,8 @@
-variable "databricks_account_id" { }
-variable "databricks_client_id" { }
-variable "databricks_client_secret" { }
-variable "databricks_admin_user_id" { }
-variable "databricks_workspace_id" { }
+variable "databricks_account_id" {}
+variable "databricks_client_id" {}
+variable "databricks_client_secret" {}
+variable "databricks_admin_user_id" {}
+variable "databricks_workspace_id" {}
 
 terraform {
   required_providers {
@@ -38,8 +38,8 @@ resource "databricks_mws_permission_assignment" "admin_user" {
 # Pattern 2: Assigning permissions to a group
 # =============================================================================
 resource "databricks_group" "group1" {
-  provider     = databricks.mws
-  display_name = "test-group-1"
+  provider         = databricks.mws
+  display_name     = "test-group-1"
   workspace_access = true
 }
 

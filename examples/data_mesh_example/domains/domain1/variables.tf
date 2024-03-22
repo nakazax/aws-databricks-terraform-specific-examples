@@ -11,3 +11,10 @@ variable "domain1" {
     url              = string
   })
 }
+
+variable "domains" {
+  type = list(object({
+    domain_name  = string
+    workspace_id = string
+  }))
+}

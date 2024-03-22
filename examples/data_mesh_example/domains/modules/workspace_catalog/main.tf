@@ -155,20 +155,20 @@ resource "databricks_catalog" "this" {
 # =============================================================================
 resource "databricks_grant" "storage_credential" {
   storage_credential = databricks_storage_credential.external.id
-  principal  = var.admin_group_name
-  privileges = ["ALL_PRIVILEGES"]
-  depends_on = [databricks_catalog.this]
+  principal          = var.admin_group_name
+  privileges         = ["ALL_PRIVILEGES"]
+  depends_on         = [databricks_catalog.this]
 }
 
 resource "databricks_grant" "external_location" {
   external_location = databricks_external_location.this.id
-  principal  = var.admin_group_name
-  privileges = ["ALL_PRIVILEGES"]
-  depends_on = [databricks_catalog.this]
+  principal         = var.admin_group_name
+  privileges        = ["ALL_PRIVILEGES"]
+  depends_on        = [databricks_catalog.this]
 }
 
 resource "databricks_grant" "catalog" {
-  catalog = databricks_catalog.this.id
+  catalog    = databricks_catalog.this.id
   principal  = var.admin_group_name
   privileges = ["ALL_PRIVILEGES"]
   depends_on = [databricks_catalog.this]

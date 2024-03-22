@@ -7,8 +7,8 @@ terraform {
   }
 }
 
-variable "workspace_id" { }
-variable "principal_id" { }
+variable "workspace_id" {}
+variable "principal_id" {}
 
 resource "databricks_mws_permission_assignment" "this" {
   principal_id = var.principal_id
